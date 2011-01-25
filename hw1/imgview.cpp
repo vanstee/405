@@ -19,6 +19,7 @@ using namespace Magick;
 
 Image image("640x480", "black");
 const PixelPacket* pixmap;
+const int GL_TYPE = QuantumDepth == 8 ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT;
 
 void imageToPixmap() {
 	image.flip();
@@ -50,7 +51,7 @@ void writeImage() {
 void handleDisplay() {
   glClear(GL_COLOR_BUFFER_BIT);
 	glRasterPos2i(0, 0);
-	glDrawPixels(image.columns(), image.rows(), GL_BGRA, GL_UNSIGNED_SHORT, pixmap);
+	glDrawPixels(image.columns(), image.rows(), GL_BGRA, GL_TYPE, pixmap);
 	glutSwapBuffers();
 }
 
