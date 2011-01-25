@@ -1,0 +1,4 @@
+*.o
+pixmaps/pixmaps
+glmagick/glmagick
+hw1/imgview
