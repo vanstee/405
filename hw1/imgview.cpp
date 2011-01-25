@@ -91,8 +91,8 @@ void handleReshape(int w, int h) {
 		glPixelZoom(ratio, ratio);
 	}
 	
-	const int x = (int)(w - (image.columns() * ratio)) / 2;
-	const int y = (int)(h - (image.rows() * ratio)) / 2;
+	const int x = (int)((w - (image.columns() * ratio)) / 2);
+	const int y = (int)((h - (image.rows() * ratio)) / 2);
 	glViewport(x, y, w - x, h - y);
 	
 	glMatrixMode(GL_PROJECTION);
