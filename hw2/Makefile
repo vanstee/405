@@ -12,11 +12,19 @@
 CC      = g++
 C	= cpp
 H	= h
-CFLAGS 	= -g
-LDFLAGS = -lm
+CFLAGS   = -g `Magick++-config --cppflags`
+LFLAGS   = -g `Magick++-config --ldflags`
 HFILES 	= Vector.${H} Utility.${H}
 OFILES 	= Vector.o Utility.o
-PROJECT = raycast
+PROJECT  = raycast
+
+ifeq ("$(shell uname)", "Darwin")
+  LDFLAGS     = -framework Foundation -framework GLUT -framework OpenGL -lMagick++ -lm
+else
+  ifeq ("$(shell uname)", "Linux")
+    LDFLAGS     = -L /usr/lib64/ -lglut -lGL -lMagick++ -lm
+  endif
+endif
 
 ${PROJECT}:	${PROJECT}.o $(OFILES)
 	${CC} $(CFLAGS) -o ${PROJECT} ${PROJECT}.o $(OFILES) $(LDFLAGS)

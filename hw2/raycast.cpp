@@ -24,16 +24,18 @@
 #  include <GL/glut.h>
 #endif
 
+#include "Vector.h"
+
 using namespace std;
 using namespace Magick;
 
-Image image("640x480", "black");
-const PixelPacket* pixmap;
+Image image("250x200", "black");
+PixelPacket* pixmap;
 const int GL_TYPE = QuantumDepth == 8 ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT;
 
 void imageToPixmap() {
 	image.flip();
-	pixmap = image.getConstPixels(0, 0, image.columns(), image.rows());
+	pixmap = image.getPixels(0, 0, image.columns(), image.rows());
 }
 
 void pixmapToImage() {
@@ -111,20 +113,44 @@ void handleReshape(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void drawScene() {
-	float cols   = 250;	
-	float rows   = 200;
-	float width  = 0.5;
-	float height = 0.4;
-	float pixwidth  = width / cols; 
-	float pixheight = height / rows;
+void setupScene() {
+	
+}
 
-	for(int row = 0; row < rows; row++) {
-		for(int col = 0; col < cols; col++) {
-			float px = (col * pixwidth) - (width / 2) - (pixwidth / 2);			
-			float py = (row * pixheight) - (height / 2) - (pixheight / 2);
+void drawScene() {
+	imageToPixmap();
+	
+	double width = 0.5;
+	double height = 0.4;
+	double pixwidth = width / image.columns();
+	double pixheight = height / image.rows();
+	
+	for(int row = 0; row < image.rows(); row++) {
+		for(int col = 0; col < image.columns(); col++) {
+			double px = (col * pixwidth) - (width / 2) - (pixwidth / 2);
+			double py = (row * pixheight) - (height / 2) - (pixheight / 2);
+			
+			Vector3d v(0, 0, 0.5);
+			Vector3d p(px, py, 0);
+			Vector3d ur = (p - v).normalize();
+			
+			Vector3d c(0.3, 0.3, -1.1);
+			Vector3d cur = (c - p);
+			double t = ur * cur;
+			Vector3d x = p + (t * ur);
+			Vector3d d = c - x;
+			
+			if(d.norm() <= 0.300) {
+				*(pixmap + (row * image.columns()) + col) = Color("blue");
+			}
 		}
 	}
+	
+	pixmapToImage();
+}
+
+void computeRay(Vector3d v, Vector3d) {
+	
 }
 
 int main(int argc, char* argv[]){
@@ -133,15 +159,15 @@ int main(int argc, char* argv[]){
   glutInitWindowSize(250, 200);
   glutCreateWindow("Oh Shoot!");
 
-	//imageToPixmap();
+	//setupScene();
 	drawScene();
-
+  
   glutDisplayFunc(handleDisplay);
   glutKeyboardFunc(handleKeyboard);
   glutReshapeFunc(handleReshape);
   
   glClearColor(0, 0, 0, 0);
-
+  
   glutMainLoop();
   return 0;
 }
