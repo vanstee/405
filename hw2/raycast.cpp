@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -29,7 +30,22 @@
 using namespace std;
 using namespace Magick;
 
-Image image("250x200", "black");
+struct Sphere {
+	double x, y, z, r;
+	string color;
+};
+
+Sphere sphere[5] = {
+	 { -0.30,  0.10, -0.50, 0.050, "red"},
+	 {  0.00, -0.20, -0.80, 0.150, "green"},	
+	 {  0.30,  0.30, -1.10, 0.300, "blue"},	
+	 {  0.10,  0.20, -0.30, 0.075, "orange"},	
+	 { -0.20, -0.25, -0.40, 0.225, "purple"},	
+};
+short perspective = true;
+string filename = "";
+int width = 250;
+Image image;
 PixelPacket* pixmap;
 const int GL_TYPE = QuantumDepth == 8 ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT;
 
@@ -45,19 +61,11 @@ void pixmapToImage() {
 	image.flip();
 }
 
-void readImage(string filename) {
-	if(filename.empty()) {
-		cout << "Enter input image filename: ";
-		cin >> filename;		
-	}
-	image.read(filename);
-}
-
 void writeImage() {
-	string filename;
-	cout << "Enter output image filename: ";
-	cin >> filename;
-	image.write(filename);
+	if(filename != "") {
+		image.flip();
+		image.write(filename);
+	}
 }
 
 void handleDisplay() {
@@ -69,17 +77,8 @@ void handleDisplay() {
 
 void handleKeyboard(unsigned char key, int x, int y){
   switch(key){
-    case 'r':
-    case 'R': 
-			readImage(""); 
-			imageToPixmap();
-			glutReshapeWindow(image.columns(), image.rows());			
-			handleDisplay();
-			break;
-			
     case 'w':
     case 'W': 
-			pixmapToImage();
 			writeImage();
 			break;
 			
@@ -113,13 +112,7 @@ void handleReshape(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void setupScene() {
-	
-}
-
 void drawScene() {
-	imageToPixmap();
-	
 	double width = 0.5;
 	double height = 0.4;
 	double pixwidth = width / image.columns();
@@ -130,36 +123,59 @@ void drawScene() {
 			double px = (col * pixwidth) - (width / 2) - (pixwidth / 2);
 			double py = (row * pixheight) - (height / 2) - (pixheight / 2);
 			
-			Vector3d v(0, 0, 0.5);
-			Vector3d p(px, py, 0);
+			Vector3d v = perspective ? Vector3d(0, 0, 0.5) : Vector3d(px, py, 0.5);
+			Vector3d p(px, py, 0);			
 			Vector3d ur = (p - v).normalize();
 			
-			Vector3d c(0.3, 0.3, -1.1);
-			Vector3d cur = (c - p);
-			double t = ur * cur;
-			Vector3d x = p + (t * ur);
-			Vector3d d = c - x;
-			
-			if(d.norm() <= 0.300) {
-				*(pixmap + (row * image.columns()) + col) = Color("blue");
+			for(int i = 0; i < 5; i++) {
+				Vector3d c(sphere[i].x, sphere[i].y, sphere[i].z);
+				Vector3d cur = (c - p);
+				double t = ur * cur;
+				Vector3d x = p + (t * ur);
+				Vector3d d = c - x;
+
+				if(d.norm() <= sphere[i].r)
+					image.pixelColor(col, row, sphere[i].color);
 			}
 		}
 	}
 	
-	pixmapToImage();
-}
-
-void computeRay(Vector3d v, Vector3d) {
-	
+	image.flip();
+	imageToPixmap();
 }
 
 int main(int argc, char* argv[]){
+	switch(argc) {
+		case 1: break;
+		case 2:
+			perspective = string(argv[1]).compare("v") == 0;
+			break;		
+		case 3:
+			perspective = string(argv[1]).compare("v") == 0;
+			width = atoi(argv[2]);
+			break;		
+		case 4:
+			perspective = string(argv[1]).compare("v") == 0;
+			width = atoi(argv[2]);
+			filename = string(argv[3]);			
+			break;
+		default:
+			cout << "USAGE: raycast [l|v] [pixwidth] [filename.ext]\n";
+			exit(1);
+	}
+	
+	int height = (width / 5.0) * 4;
+	
+	stringstream dimensions;
+	dimensions << width << "x" << height;
+	
+	image = Image(dimensions.str(), "black");
+	
 	glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowSize(250, 200);
+  glutInitWindowSize(image.columns(), image.rows());
   glutCreateWindow("Oh Shoot!");
 
-	//setupScene();
 	drawScene();
   
   glutDisplayFunc(handleDisplay);
