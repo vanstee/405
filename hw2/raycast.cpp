@@ -117,6 +117,7 @@ void drawScene() {
 	double height = 0.4;
 	double pixwidth = width / image.columns();
 	double pixheight = height / image.rows();
+	double min = 0;
 	
 	for(int row = 0; row < image.rows(); row++) {
 		for(int col = 0; col < image.columns(); col++) {
@@ -133,10 +134,17 @@ void drawScene() {
 				double t = ur * cur;
 				Vector3d x = p + (t * ur);
 				Vector3d d = c - x;
-
-				if(d.norm() <= sphere[i].r)
-					image.pixelColor(col, row, sphere[i].color);
+				
+				if(d.norm() <= sphere[i].r) {
+					double a = sqrt((sphere[i].r * sphere[i].r) - (d.norm() * d.norm()));
+					x = x - (x * a);
+					if(min == 0 || x.norm() < min) {
+						min = x.norm();
+						image.pixelColor(col, row, sphere[i].color);
+					}
+				}
 			}
+			min = 0;
 		}
 	}
 	
