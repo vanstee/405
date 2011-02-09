@@ -26,22 +26,19 @@
 #endif
 
 #include "Vector.h"
+#include "Sphere.h"
 
 using namespace std;
 using namespace Magick;
 
-struct Sphere {
-	double x, y, z, r;
-	string color;
+Sphere sphere[5] = {
+	Sphere(-0.30,  0.10, -0.50, 0.050, "red"),
+	Sphere( 0.00, -0.20, -0.80, 0.150, "green"),
+	Sphere( 0.30,  0.30, -1.10, 0.300, "blue"),
+	Sphere( 0.10,  0.20, -0.30, 0.075, "orange"),			
+	Sphere(-0.20, -0.25, -0.40, 0.225, "purple")
 };
 
-Sphere sphere[5] = {
-	 { -0.30,  0.10, -0.50, 0.050, "red"},
-	 {  0.00, -0.20, -0.80, 0.150, "green"},	
-	 {  0.30,  0.30, -1.10, 0.300, "blue"},	
-	 {  0.10,  0.20, -0.30, 0.075, "orange"},	
-	 { -0.20, -0.25, -0.40, 0.225, "purple"},	
-};
 short perspective = true;
 string filename = "";
 int width = 250;
@@ -117,7 +114,7 @@ void drawScene() {
 	double height = 0.4;
 	double pixwidth = width / image.columns();
 	double pixheight = height / image.rows();
-	double min = 0;
+	double hit, min;
 	
 	for(int row = 0; row < image.rows(); row++) {
 		for(int col = 0; col < image.columns(); col++) {
@@ -129,22 +126,13 @@ void drawScene() {
 			Vector3d ur = (p - v).normalize();
 			
 			for(int i = 0; i < 5; i++) {
-				Vector3d c(sphere[i].x, sphere[i].y, sphere[i].z);
-				Vector3d cur = (c - p);
-				double t = ur * cur;
-				Vector3d x = p + (t * ur);
-				Vector3d d = c - x;
-				
-				if(d.norm() <= sphere[i].r) {
-					double a = sqrt((sphere[i].r * sphere[i].r) - (d.norm() * d.norm()));
-					x = x - (x * a);
-					if(min == 0 || x.norm() < min) {
-						min = x.norm();
-						image.pixelColor(col, row, sphere[i].color);
-					}
+				hit = sphere[i].closest_hit(ur, p);
+				if(hit > 0 && (min < 0 || hit < min)) {
+					min = hit;
+					image.pixelColor(col, row, sphere[i].color);
 				}
 			}
-			min = 0;
+			min = -1;
 		}
 	}
 	

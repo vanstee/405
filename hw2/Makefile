@@ -14,8 +14,8 @@ C	= cpp
 H	= h
 CFLAGS   = -g `Magick++-config --cppflags`
 LFLAGS   = -g `Magick++-config --ldflags`
-HFILES 	= Vector.${H} Utility.${H}
-OFILES 	= Vector.o Utility.o
+HFILES 	= Sphere.${H} Vector.${H} Utility.${H} 
+OFILES 	= Sphere.o Vector.o Utility.o
 PROJECT  = raycast
 
 ifeq ("$(shell uname)", "Darwin")
@@ -31,6 +31,9 @@ ${PROJECT}:	${PROJECT}.o $(OFILES)
 
 ${PROJECT}.o: ${PROJECT}.${C} $(HFILES)
 	${CC} $(CFLAGS) -c ${PROJECT}.${C}
+	
+Sphere.o: Sphere.${C} Sphere.${H} Vector.${H} Utility.${H}
+	${CC} $(CFLAGS) -c Sphere.${C}
 
 Vector.o: Vector.${C} Vector.${H} Utility.${H} 
 	${CC} $(CFLAGS) -c Vector.${C}
