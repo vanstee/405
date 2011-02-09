@@ -5,7 +5,7 @@
 //
 // Name: Patrick Van Stee
 //
-// Date: February, 2011
+// Date: February 9, 2011
 //
 // Instructions:
 // $ make clean && make
