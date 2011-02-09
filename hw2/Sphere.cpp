@@ -1,3 +1,5 @@
+// This is just a class to split up some of the hit logic
+
 #include "Sphere.h"
 
 using namespace std;
@@ -7,6 +9,8 @@ Sphere::Sphere(double x, double y, double z, double radius, string color):
 
 Sphere::~Sphere() {}
 
+// returns the distance from the sphere to the perspective pixel if there is an intersection
+// otherwise it returns -1.0
 double Sphere::closest_hit(Vector3d ur, Vector3d p) {
 	Vector3d c(this->x, this->y, this->z);
 	Vector3d cur = (c - p);
@@ -16,7 +20,6 @@ double Sphere::closest_hit(Vector3d ur, Vector3d p) {
 	double distance = d.norm();
 	
 	if(distance <= this->radius) {
-		//printf("%f %f\n", this->radius_squared(), (distance * distance));
 		double a = sqrt(this->radius_squared() - (distance * distance));
 		x = x - (x * a);
 		return x.norm();
