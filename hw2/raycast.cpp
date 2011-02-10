@@ -141,26 +141,22 @@ void drawScene() {
 }
 
 int main(int argc, char* argv[]){
-	switch(argc) {
-		case 1: break;
-		case 2:
-			perspective = string(argv[1]).compare("v") == 0;
-			break;		
-		case 3:
-			perspective = string(argv[1]).compare("v") == 0;
-			width = atoi(argv[2]);
-			break;		
-		case 4:
-			perspective = string(argv[1]).compare("v") == 0;
-			width = atoi(argv[2]);
-			filename = string(argv[3]);			
-			break;
-		default:
-			cout << "USAGE: raycast [l|v] [pixwidth] [filename.ext]\n";
-			exit(1);
+	if(argc > 4) {
+		cout << "USAGE: raycast [l|v] [pixwidth] [filename.ext]\n";
+		exit(1);		
 	}
 	
-	int height = (width / 5.0) * 4;
+	for(int i = 0; i < argc; i++) {
+		if(strcmp(argv[i], "v") == 0 || strcmp(argv[i], "l") == 0) {
+			perspective = strcmp(argv[i], "v") == 0;
+		} else if(atoi(argv[i]) != 0) {
+			width = atoi(argv[i]);
+		} else {
+			filename = string(argv[i]);
+		}
+	}
+	
+	int height = int((width / 5.0) * 4);
 	
 	stringstream dimensions;
 	dimensions << width << "x" << height;
