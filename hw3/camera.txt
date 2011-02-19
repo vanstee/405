@@ -1,0 +1,6 @@
+0.0  0.0  1.0     # viewpoint
+0.0  0.0 -1.0     # view direction
+0.0  1.0  0.0     # up direction
+0.5               # focal length
+1.25              # aspect ratio
+250               # screen width

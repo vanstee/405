@@ -12,8 +12,8 @@ C	= cpp
 H	= h
 CFLAGS   = -g `Magick++-config --cppflags`
 LFLAGS   = -g `Magick++-config --ldflags`
-HFILES 	= ParallelLight.${H} PointLight.${H} Light.${H} Sphere.${H} Material.${H} Color.${H} Vector.${H} Utility.${H} 
-OFILES 	= ParallelLight.o PointLight.o Light.o Sphere.o Material.o Color.o Vector.o Utility.o
+HFILES 	= Camera.${H} ParallelLight.${H} PointLight.${H} Light.${H} Sphere.${H} Material.${H} Color.${H} Vector.${H} Utility.${H} 
+OFILES 	= Camera.o ParallelLight.o PointLight.o Light.o Sphere.o Material.o Color.o Vector.o Utility.o
 PROJECT  = shady
 
 ifeq ("$(shell uname)", "Darwin")
@@ -29,6 +29,9 @@ ${PROJECT}:	${PROJECT}.o $(OFILES)
 
 ${PROJECT}.o: ${PROJECT}.${C} $(HFILES)
 	${CC} $(CFLAGS) -c ${PROJECT}.${C}
+
+Camera.o: Camera.${C} Camera.${H} Vector.${H} Utility.${H}
+	${CC} $(CFLAGS) -c Camera.${C}
 
 ParallelLight.o: ParallelLight.${C} ParallelLight.${H} Light.${H} Vector.${H} Utility.${H} Color.${H}
 	${CC} $(CFLAGS) -c ParallelLight.${C}

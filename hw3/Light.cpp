@@ -20,7 +20,7 @@ Color Light::specular(Vector3d ul, Vector3d ur, Vector3d hit, Sphere sphere) {
 	double b = ul * n;
 	Vector3d ulprime = ul - (2 * b * n);
 	double k = ulprime * -ur;
-	if(k > 0) {
+	if(k > 0 && sphere.material.specular > 0) {
 		return pow(k, sphere.material.specular) * color * sphere.material.color;
 	}
 	return Color(0.0, 0.0, 0.0);
