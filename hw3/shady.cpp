@@ -35,7 +35,7 @@
 
 using namespace std;
 
-Camera *camera = new Camera(Vector3d(0, 0, 1), Vector3d(0, 0, -1), Vector3d(0, 1, 0), 0.5, 1.25, 0.5, 600);
+Camera *camera = new Camera(Vector3d(0, 0, 0.5), Vector3d(0, 0, -1), Vector3d(0, 1, 0), 0.5, 1.25, 0.5, 600);
 
 Light *lights[2] = {
 	new PointLight(Vector3d(-1.00, 1.00, 0.25), Color(0.4, 0.4, 0.8)),
@@ -121,28 +121,15 @@ void handleReshape(int w, int h) {
 }
 
 void drawScene() {
-	//double width = 0.5;
-	//double height = 0.4;
-	//double pwidth = width / image.columns();
-	//double pheight = height / image.rows();
-	//double xoffset = (width / 2) - (pwidth / 2);
-	//double yoffset = (height / 2) - (pheight / 2);
-	
 	Vector3d ux = (camera->v % camera->vup).normalize();
 	Vector3d uy = camera->vup.normalize();
 	Vector3d uz = -camera->v.normalize();
 	Vector3d origin = camera->vp - (camera->focal * uz);
-	Vector3d southeast = origin - ((camera->width / 2.0) * ux) - ((camera->height / 2.0) * uy);
-	southeast.print();
 	
 	for(int row = 0; row < image.rows(); row++) {
 		for(int col = 0; col < image.columns(); col++) {
-			Vector3d p = southeast + camera->p(row, col);
-			Vector3d ur = (p - camera->vp).normalize();
-			p.print();
-			printf("\n");
-			ur.print();
-			printf("\n");			
+			Vector3d p = origin + camera->p(row, col);
+			Vector3d ur = perspective ? (p - camera->vp).normalize() : -uz;
 
 			//Vector3d v = perspective ? Camera.perspective() : Camera:parallel();
 			//Vector3d p = Camera.viewpoint(row, col);

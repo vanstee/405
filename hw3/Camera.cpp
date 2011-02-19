@@ -5,7 +5,7 @@
 using namespace std;
 
 Camera::Camera(Vector3d vp, Vector3d v, Vector3d vup, double focal, double aspect, double width, double columns) :
-							 vp(vp), v(v), vup(vup), focal(focal), width(width), height(width * aspect) {
+							 vp(vp), v(v), vup(vup), focal(focal), width(width), height(width / aspect) {
 	pwidth = width / columns;
 	pheight = height / (columns / aspect);
 	xoffset = (width / 2) - (pwidth / 2);
