@@ -11,7 +11,7 @@ class Camera {
 		Vector3d vp, v, vup;
 		double focal, width, height, pwidth, pheight, xoffset, yoffset;
 		Camera(Vector3d, Vector3d, Vector3d, double, double, double, double);
-		Vector3d p(int, int);
+		Vector3d p(int, int, Vector3d, Vector3d);
 };
 
 #endif

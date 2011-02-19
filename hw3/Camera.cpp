@@ -12,8 +12,8 @@ Camera::Camera(Vector3d vp, Vector3d v, Vector3d vup, double focal, double aspec
 	yoffset = (height / 2) - (pheight / 2);
 }
 	
-Vector3d Camera::p(int row, int col) {
+Vector3d Camera::p(int row, int col, Vector3d ux, Vector3d uy) {
 	double px = (col * pwidth) - xoffset;			
 	double py = (row * pheight) - yoffset;
-	return Vector3d(px, py, 0);
+	return (px * ux) + (py * uy);
 }

@@ -128,17 +128,9 @@ void drawScene() {
 	
 	for(int row = 0; row < image.rows(); row++) {
 		for(int col = 0; col < image.columns(); col++) {
-			Vector3d p = origin + camera->p(row, col);
+			Vector3d p = origin + camera->p(row, col, ux, uy);
 			Vector3d ur = perspective ? (p - camera->vp).normalize() : -uz;
 
-			//Vector3d v = perspective ? Camera.perspective() : Camera:parallel();
-			//Vector3d p = Camera.viewpoint(row, col);
-			
-			//Vector3d v = perspective ? Vector3d(0, 0, 0.5) : Vector3d(px, py, 0.5);
-			//Vector3d p(px, py, 0);
-			//
-			//Vector3d ur = (p - v).normalize();
-			
 			double distance, min = -1;
 			Sphere* sphere;
 			
