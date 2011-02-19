@@ -13,8 +13,7 @@ class Sphere {
 		double radius;
 		Material material;
 		Sphere(Vector3d, double, Material);
-		double closest_hit(Vector3d, Vector3d);
-		double radius_squared();
+		double intersection(Vector3d, Vector3d);
 };
 
 #endif

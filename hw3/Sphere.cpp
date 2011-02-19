@@ -3,26 +3,22 @@
 #include "Sphere.h"
 
 using namespace std;
-						
+
 Sphere::Sphere(Vector3d center, double radius, Material material) : 
 	center(center), radius(radius), material(material) {}
 
-double Sphere::closest_hit(Vector3d ur, Vector3d p) {
+double Sphere::intersection(Vector3d p, Vector3d ur) {
 	Vector3d cur = (center - p);
 	double t = ur * cur;
 	Vector3d x = p + (t * ur);
 	Vector3d d = center - x;
 	double distance = d.norm();
 	
-	if(distance <= this->radius) {
-		double a = sqrt(this->radius_squared() - (distance * distance));
+	if(distance <= radius) {
+		double a = sqrt(pow(radius, 2) - pow(distance, 2));
 		return t - a;
 	}
 	else {
 		return -1.0;
 	}
-}
-
-double Sphere::radius_squared() {
-	return this->radius * this->radius;
 }

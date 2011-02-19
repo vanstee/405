@@ -13,8 +13,8 @@ class Light {
 		Vector3d center;
 		Color color;
 		Light(Vector3d, Color);
-	  Color diffuse(Vector3d, Vector3d, Sphere);
-	  Color specular(Vector3d, Vector3d, Sphere);
+	  virtual Color diffuse(Vector3d, Vector3d, Sphere) = 0;
+		virtual Color specular(Vector3d, Vector3d, Sphere) = 0;
 };
 
 #endif
