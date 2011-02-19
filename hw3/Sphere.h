@@ -9,10 +9,10 @@ class Sphere;
 
 class Sphere {
 	public:
-		double x, y, z, radius;
+		Vector3d center;
+		double radius;
 		Color color;
-		Sphere(double, double, double, double, double, double, double);
-		~Sphere();
+		Sphere(Vector3d, double, Color);
 		double closest_hit(Vector3d, Vector3d);
 		double radius_squared();
 };

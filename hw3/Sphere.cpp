@@ -3,21 +3,15 @@
 #include "Sphere.h"
 
 using namespace std;
+						
+Sphere::Sphere(Vector3d center, double radius, Color color) : 
+	center(center), radius(radius), color(color) {}
 
-Sphere::Sphere(double x, double y, double z, double radius,
-							 double r, double g, double b):
-							x(x), y(y), z(z), radius(radius), color(Color(r, g, b)) {}
-
-Sphere::~Sphere() {}
-
-// returns the distance from the sphere to the perspective pixel if there is an intersection
-// otherwise it returns -1.0
 double Sphere::closest_hit(Vector3d ur, Vector3d p) {
-	Vector3d c(this->x, this->y, this->z);
-	Vector3d cur = (c - p);
+	Vector3d cur = (center - p);
 	double t = ur * cur;
 	Vector3d x = p + (t * ur);
-	Vector3d d = c - x;
+	Vector3d d = center - x;
 	double distance = d.norm();
 	
 	if(distance <= this->radius) {

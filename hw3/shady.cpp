@@ -33,15 +33,15 @@
 using namespace std;
 
 Light light[1] = {
-	Light(-1, 1, 0.25, 0.4, 0.4, 0.8)
+	Light(Vector3d(-1.00, 1.00, 0.25), Color(0.4, 0.4, 0.8))
 };
 
 Sphere sphere[5] = {
-	Sphere(-0.30,  0.10, -0.50, 0.050, 1, 0, 0),
-	Sphere( 0.00, -0.20, -0.80, 0.150, 0, 1, 0),
-	Sphere( 0.30,  0.30, -1.10, 0.300, 0, 0, 1),
-	Sphere( 0.10,  0.20, -0.30, 0.075, 1, 0.5, 0),			
-	Sphere(-0.20, -0.25, -0.40, 0.225, 0.5, 0, 1)
+	Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Color(1.0, 0.0, 0.0)),
+	Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Color(0.0, 1.0, 0.0)),
+	Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Color(0.0, 0.0, 1.0)),
+	Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Color(1.0, 0.5, 0.0)),			
+	Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Color(0.5, 0.0, 1.0))
 };
 
 short perspective = true;

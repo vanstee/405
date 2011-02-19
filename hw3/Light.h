@@ -10,10 +10,9 @@ class Light;
 
 class Light {
 	public:
-		double x, y, z;
+		Vector3d center;
 		Color color;
-		Light(double, double, double, double, double, double);
-		~Light();
+		Light(Vector3d, Color);
 	  Color diffuse(Vector3d, Vector3d, Sphere);
 	  Color specular(Vector3d, Vector3d, Sphere);
 };
