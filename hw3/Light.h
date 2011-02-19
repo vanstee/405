@@ -10,11 +10,14 @@ class Light;
 
 class Light {
 	public:
-		Vector3d center;
+		Vector3d center, ul;
 		Color color;
-		Light(Vector3d, Color);
-	  virtual Color diffuse(Vector3d, Vector3d, Sphere) = 0;
-		virtual Color specular(Vector3d, Vector3d, Sphere) = 0;
+		Light(Vector3d vector, Color color);
+		virtual Color diffuse(Vector3d, Vector3d, Sphere) = 0;
+		virtual Color specular(Vector3d, Vector3d, Sphere) = 0;				
+	protected:
+		Color diffuse(Vector3d, Vector3d, Vector3d, Sphere);
+		Color specular(Vector3d, Vector3d, Vector3d, Sphere);
 };
 
 #endif

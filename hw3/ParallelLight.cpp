@@ -4,27 +4,13 @@
 
 using namespace std;
 						
-ParallelLight::ParallelLight(Vector3d center, Color color) :
-	Light(center, color) {}
+ParallelLight::ParallelLight(Vector3d ul, Color color) :
+	Light(ul, color) {}
 
 Color ParallelLight::diffuse(Vector3d ur, Vector3d hit, Sphere sphere) {
-	Vector3d ul = (hit - center).normalize();
-	Vector3d n = (hit - sphere.center).normalize();
-	double k = -(ul * n);
-	if(k > 0) {
-		return k * color * sphere.material.color * sphere.material.diffuse;
-	}
-	return Color(0.0, 0.0, 0.0);
+	return Light::diffuse(ul, ur, hit, sphere);
 }
 
 Color ParallelLight::specular(Vector3d ur, Vector3d hit, Sphere sphere) {
-	Vector3d ul = (hit - center).normalize();
-	Vector3d n = (hit - sphere.center).normalize();
-	double b = ul * n;
-	Vector3d ulprime = ul - (2 * b * n);
-	double k = ulprime * -ur;
-	if(k > 0) {
-		return pow(k, sphere.material.specular) * color * sphere.material.color;
-	}
-	return Color(0.0, 0.0, 0.0);
+	return Light::specular(ul, ur, hit, sphere);
 }

@@ -36,15 +36,15 @@ using namespace std;
 
 Light *lights[2] = {
 	new PointLight(Vector3d(-1.00, 1.00, 0.25), Color(0.4, 0.4, 0.8)),
-	new ParallelLight(Vector3d(sqrt(2.0), sqrt(2.0), sqrt(2.0)), Color(0.8, 0.8, 0.2))
+	new ParallelLight(Vector3d(-sqrt(2.0), -sqrt(2.0), 0.25), Color(0.8, 0.8, 0.2))
 };
 
 Sphere *spheres[] = {
-	new Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Material(Color(1.0, 0.0, 0.0), 0.2, 1.0, 10.0)),
-	new Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Material(Color(0.0, 1.0, 0.0), 0.2, 1.0, 10.0)),
-	new Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Material(Color(0.0, 0.0, 1.0), 0.2, 1.0, 10.0)),
-	new Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Material(Color(1.0, 0.5, 0.0), 0.2, 1.0, 10.0)),			
-	new Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Material(Color(0.5, 0.0, 1.0), 0.2, 1.0, 10.0))
+	new Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Material(Color(1.0, 0.0, 0.0), 0.2, 1.0, 1.0)),
+	new Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Material(Color(0.0, 1.0, 0.0), 0.2, 0.0, 30.0)),
+	new Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Material(Color(0.0, 0.0, 1.0), 0.2, 1.0, 30.0)),
+	new Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Material(Color(1.0, 0.5, 0.0), 0.2, 1.0, 30.0)),			
+	new Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Material(Color(0.5, 0.0, 1.0), 0.2, 0.5, 0.5))
 };
 
 short perspective = true;
