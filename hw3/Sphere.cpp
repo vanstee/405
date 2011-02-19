@@ -4,8 +4,8 @@
 
 using namespace std;
 						
-Sphere::Sphere(Vector3d center, double radius, Color color) : 
-	center(center), radius(radius), color(color) {}
+Sphere::Sphere(Vector3d center, double radius, Material material) : 
+	center(center), radius(radius), material(material) {}
 
 double Sphere::closest_hit(Vector3d ur, Vector3d p) {
 	Vector3d cur = (center - p);

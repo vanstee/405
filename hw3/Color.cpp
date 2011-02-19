@@ -2,33 +2,49 @@
 
 using namespace std;
 
-Color::Color(): r(0), g(0), b(0) {}
-
 Color::Color(double r, double g, double b):
 	r(r), g(g), b(b) {}
 	
-Color::Color(const Color& color):
- 	r(color.r), g(color.g), b(color.b) {}
+Magick::ColorRGB Color::ColorRGB() {
+	double r = this->r;
+	double g = this->g;
+	double b = this->b;
+	
+	r = r < 0 ? 0 : r;
+	g = g < 0 ? 0 : g;
+	b = b < 0 ? 0 : b;
+	
+	r = r > 1 ? 1 : r;
+	g = g > 1 ? 1 : g;
+	b = b > 1 ? 1 : b;			
+				
+	return Magick::ColorRGB(r, g, b);
+}
 
-Color::~Color() {}
+Color operator*(const Color& color, double scalar) {
+	double r = color.r * scalar;
+	double g = color.g * scalar;
+	double b = color.b * scalar;
+	return Color(r, g, b);		
+}
 
-Color Color::scale(double d) {
-	double r = this->r * d;
-	double g = this->g * d;
-	double b = this->b * d;			
+Color operator*(double scalar, const Color& color) {
+	double r = color.r * scalar;
+	double g = color.g * scalar;
+	double b = color.b * scalar;
 	return Color(r, g, b);
 }
 
-Color Color::add(Color color) {
-	double r = this->r + color.r;
-	double g = this->g + color.g;
-	double b = this->b + color.b;
-	return Color(r, g, b);
+Color operator+(const Color& color1, const Color& color2) {
+	double r = color1.r + color2.r;
+	double g = color1.g + color2.g;
+	double b = color1.b + color2.b;
+	return Color(r, g, b);		
 }
 
-Color Color::multiply(Color color) {
-	double r = this->r * color.r;
-	double g = this->g * color.g;
-	double b = this->b * color.b;
-	return Color(r, g, b);
+Color operator*(const Color& color1, const Color& color2) {
+	double r = color1.r * color2.r;
+	double g = color1.g * color2.g;
+	double b = color1.b * color2.b;
+	return Color(r, g, b);		
 }

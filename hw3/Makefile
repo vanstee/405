@@ -12,8 +12,8 @@ C	= cpp
 H	= h
 CFLAGS   = -g `Magick++-config --cppflags`
 LFLAGS   = -g `Magick++-config --ldflags`
-HFILES 	= Light.${H} Sphere.${H} Color.${H} Vector.${H} Utility.${H} 
-OFILES 	= Light.o Sphere.o Color.o Vector.o Utility.o
+HFILES 	= Light.${H} Sphere.${H} Material.${H} Color.${H} Vector.${H} Utility.${H} 
+OFILES 	= Light.o Sphere.o Material.o Color.o Vector.o Utility.o
 PROJECT  = shady
 
 ifeq ("$(shell uname)", "Darwin")
@@ -33,8 +33,11 @@ ${PROJECT}.o: ${PROJECT}.${C} $(HFILES)
 Light.o: Light.${C} Light.${H} Vector.${H} Utility.${H} Color.${H}
 	${CC} $(CFLAGS) -c Light.${C}	
 
-Sphere.o: Sphere.${C} Sphere.${H} Vector.${H} Utility.${H} Color.${H}
+Sphere.o: Sphere.${C} Sphere.${H} Vector.${H} Utility.${H} Material.${H}
 	${CC} $(CFLAGS) -c Sphere.${C}
+
+Material.o: Material.${C} Material.${H} Material.${H}
+	${CC} $(CFLAGS) -c Material.${C}
 	
 Color.o: Color.${C} Color.${H}
 	${CC} $(CFLAGS) -c Color.${C}	

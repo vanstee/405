@@ -1,21 +1,20 @@
 #ifndef _H_Color
 #define _H_Color
 
+#include <Magick++.h>
 using namespace std;
 
 class Color;
 
 class Color {
 	public:
-		double r, g, b, a;
-		Color();
+		double r, g, b;
 		Color(double, double, double);
-		Color(double, double, double, double);
-		Color(const Color&);
-		~Color();
-		Color scale(double);
-		Color add(Color);		
-		Color multiply(Color);		
+		Magick::ColorRGB ColorRGB();
+		friend Color operator*(const Color&, double);
+		friend Color operator*(double, const Color&);		
+		friend Color operator+(const Color&, const Color&);
+		friend Color operator*(const Color&, const Color&);
 };
 
 #endif

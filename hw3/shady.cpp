@@ -32,16 +32,16 @@
 
 using namespace std;
 
-Light light[1] = {
+Light light[] = {
 	Light(Vector3d(-1.00, 1.00, 0.25), Color(0.4, 0.4, 0.8))
 };
 
-Sphere sphere[5] = {
-	Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Color(1.0, 0.0, 0.0)),
-	Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Color(0.0, 1.0, 0.0)),
-	Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Color(0.0, 0.0, 1.0)),
-	Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Color(1.0, 0.5, 0.0)),			
-	Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Color(0.5, 0.0, 1.0))
+Sphere sphere[] = {
+	Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Material(Color(1.0, 0.0, 0.0), 0.2, 1.0, 10.0)),
+	Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Material(Color(0.0, 1.0, 0.0), 0.2, 1.0, 10.0)),
+	Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Material(Color(0.0, 0.0, 1.0), 0.2, 1.0, 10.0)),
+	Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Material(Color(1.0, 0.5, 0.0), 0.2, 1.0, 10.0)),			
+	Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Material(Color(0.5, 0.0, 1.0), 0.2, 1.0, 10.0))
 };
 
 short perspective = true;
@@ -119,18 +119,20 @@ void drawScene() {
 	double height = 0.4;
 	double pixwidth = width / image.columns();
 	double pixheight = height / image.rows();
+	double xoffset = (width / 2.0) - (pixwidth / 2.0);
+	double yoffset = (height / 2.0) - (pixheight / 2.0);	
 	double hit, min = -1;
 	int hit_index = -1;
 	
 	for(int row = 0; row < image.rows(); row++) {
+		double py = (row * pixheight) - yoffset;
 		for(int col = 0; col < image.columns(); col++) {
-			double px = (col * pixwidth) - (width / 2) - (pixwidth / 2);
-			double py = (row * pixheight) - (height / 2) - (pixheight / 2);
+			double px = (col * pixwidth) - xoffset;
 			
-			Vector3d v = perspective ? Vector3d(0, 0, 0.5) : Vector3d(px, py, 0.5);
+			Vector3d v = perspective ? Vector3d(0.0, 0.0, 0.5) : Vector3d(px, py, 0.5);
 			Vector3d p(px, py, 0);
 			Vector3d ur = (p - v).normalize();
-			Color color(0, 0, 0);
+			Color color(0.0, 0.0, 0.0);
 			
 			for(int i = 0; i < 5; i++) {
 				hit = sphere[i].closest_hit(ur, p);
@@ -143,19 +145,14 @@ void drawScene() {
 			if(min > 0) {
 				for(int i = 0; i < 1; i++) {
 					Vector3d hit_point = p + (ur * min);
-					Color ambient = sphere[hit_index].color.scale(.2);
+					Color ambient = sphere[hit_index].material.color * 0.2;
 					Color diffuse = light[i].diffuse(ur, hit_point, sphere[hit_index]);
 					Color specular = light[i].specular(ur, hit_point, sphere[hit_index]);
-					color = diffuse.add(specular).add(ambient);
+					color = ambient + diffuse + specular;
 				}
 			}
 			
-			Magick::ColorRGB mcolor(
-				color.r > 1 ? 1 : color.r, 
-				color.g > 1 ? 1 : color.g, 
-				color.b > 1 ? 1 : color.b
-			);
-			image.pixelColor(col, row, mcolor);
+			image.pixelColor(col, row, color.ColorRGB());
 			
 			min = hit_index = -1;
 		}
