@@ -1,6 +1,7 @@
 #ifndef _H_Camera
 #define _H_Camera
 
+#include <fstream>
 #include "Vector.h"
 using namespace std;
 

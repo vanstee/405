@@ -35,11 +35,11 @@
 
 using namespace std;
 
-Camera *camera = new Camera(Vector3d(0, 0, 0.5), Vector3d(0, 0, -1), Vector3d(0, 1, 0), 0.5, 1.25, 0.5, 600);
+Camera *camera;
 
 Light *lights[2] = {
 	new PointLight(Vector3d(-1.00, 1.00, 0.25), Color(0.4, 0.4, 0.8)),
-	new ParallelLight(Vector3d(-1.00, -sqrt(6) , -1.00), Color(0.8, 0.8, 0.2))	
+	new ParallelLight(Vector3d(-1.00, -1.70 , -1.00).normalize(), Color(0.8, 0.8, 0.2))	
 };
 
 Sphere *spheres[] = {
@@ -120,6 +120,44 @@ void handleReshape(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void initCamera(const char* filename, double columns) {
+	ifstream file;
+	file.open(filename);
+	file.is_open();
+	if(!file.fail()) {
+		int line_number = 0;
+		double x, y, z, focal, aspect, width;
+		Vector3d vp, v, vup;
+		char line[64];
+
+		file.getline(line, 64);
+		sscanf(line, "%lf %lf %lf", &x, &y, &z);
+		vp = Vector3d(x, y, z);
+
+		file.getline(line, 64);
+		sscanf(line, "%lf %lf %lf", &x, &y, &z);
+		v = Vector3d(x, y, z);
+
+		file.getline(line, 64);
+		sscanf(line, "%lf %lf %lf", &x, &y, &z);
+		vup = Vector3d(x, y, z);
+
+		file.getline(line, 64);
+		sscanf(line, "%lf", &focal);
+
+		file.getline(line, 64);
+		sscanf(line, "%lf", &aspect);
+
+		file.getline(line, 64);
+		sscanf(line, "%lf", &width);
+
+		camera = new Camera(vp, v, vup, focal, aspect, width, columns);
+	}
+	else {
+		camera = new Camera(Vector3d(0, 0, 1), Vector3d(0, 0, -1), Vector3d(0, 1, 0), 0.5, 1.25, 0.5, double(width)); 
+	}
+}
+
 void drawScene() {
 	Vector3d ux = (camera->v % camera->vup).normalize();
 	Vector3d uy = camera->vup.normalize();
@@ -186,6 +224,8 @@ int main(int argc, char* argv[]){
 	dimensions << width << "x" << height;
 	
 	image = Magick::Image(dimensions.str(), "black");
+	
+	initCamera("camera.txt", width);
 	
 	glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
