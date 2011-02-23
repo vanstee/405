@@ -981,4 +981,3 @@ ostream& operator<< (ostream& os, const Vector& v){
   }
   return os;
 }
-
