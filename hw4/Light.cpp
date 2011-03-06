@@ -44,6 +44,22 @@ Color Light::reflection(Sphere sphere, Vector3d ur, Vector3d hit, Sphere *sphere
 	}
 	
   hit = hit + (um * min);
+  
+  Color color(0, 0 ,0);
+  
+	if(min > 0) {
+		Color ambient = sphere.material.color * sphere.material.ambient;
+		Color diffuse(0, 0, 0);
+		Color specular(0, 0, 0);		
+		for(int i = 0; i < 2; i++) {
+			diffuse = diffuse + lights[i]->diffuse(um, hit, sphere);
+			specular = specular + lights[i]->specular(um, hit, sphere);
+		}
+	  color = ambient + diffuse + specular;		
+	}
+	else {
+    color = sphere.material.color;
+	}  
     
-  return reflection(sphere, um, hit, spheres, lights, ++level);
+  return color + (0.2 * reflection(sphere, um, hit, spheres, lights, ++level));
 }
