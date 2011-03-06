@@ -209,8 +209,7 @@ void drawScene() {
 					specular = specular + lights[i]->specular(ur, hit, *sphere);
 				}
 				
-        Vector3d n(0, 0, 0);
-        Color reflection = Light::reflection(*sphere, ur, n, spheres, lights, 0);
+        Color reflection = Light::reflection(*sphere, ur, hit, spheres, lights, 0);
 				
 				// total up the color
 				color = ambient + diffuse + specular + reflection;

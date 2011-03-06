@@ -26,9 +26,24 @@ Color Light::specular(Vector3d ul, Vector3d ur, Vector3d hit, Sphere sphere) {
 	return Color(0.0, 0.0, 0.0);
 }
 
-Color Light::reflection(Sphere sphere, Vector3d ur, Vector3d n, Sphere **spheres, Light **lights, int level) {
-  if(level > REFLECTION_LIMIT)
-    return Color(0.0, 0.0, 0.0);
-  else
-    return reflection(sphere, ur, n, spheres, lights, ++level);
+Color Light::reflection(Sphere sphere, Vector3d ur, Vector3d hit, Sphere *spheres[5], Light *lights[2], int level) {
+  if(level > REFLECTION_LIMIT) return Color(0.0, 0.0, 0.0);
+  
+  Vector3d n = (hit - sphere.center).normalize();
+  double b = ur * n;
+  Vector3d um = ur - (2 * b * n);
+  
+	double distance, min = -1;  
+  
+	for(int i = 0; i < 5; i++) {
+		distance = spheres[i]->intersection(hit, um);
+		if(distance > 0 && (min < 0 || distance < min)) {
+			min = distance;
+			sphere = *spheres[i];
+		}
+	}
+	
+  hit = hit + (um * min);
+    
+  return reflection(sphere, um, hit, spheres, lights, ++level);
 }
