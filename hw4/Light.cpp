@@ -26,7 +26,7 @@ Color Light::specular(Vector3d ul, Vector3d ur, Vector3d hit, Sphere sphere) {
 	return Color(0.0, 0.0, 0.0);
 }
 
-Color Light::reflection(Sphere sphere, Vector3d ur, Vector3d hit, Sphere *spheres[5], Light *lights[2], int level) {
+Color Light::reflection(Sphere sphere, Vector3d ur, Vector3d hit, Sphere *spheres[5], Light *lights[3], int level) {
   if(level > REFLECTION_LIMIT) return Color(0.0, 0.0, 0.0);
   
   Vector3d n = (hit - sphere.center).normalize();
@@ -42,24 +42,20 @@ Color Light::reflection(Sphere sphere, Vector3d ur, Vector3d hit, Sphere *sphere
 			sphere = *spheres[i];
 		}
 	}
-	
-  hit = hit + (um * min);
   
-  Color color(0, 0 ,0);
-  
-	if(min > 0) {
+	if(min > 0) {	  
+    hit = hit + (um * min);	  
 		Color ambient = sphere.material.color * sphere.material.ambient;
 		Color diffuse(0, 0, 0);
 		Color specular(0, 0, 0);		
-		for(int i = 0; i < 2; i++) {
+		for(int i = 0; i < 3; i++) {
 			diffuse = diffuse + lights[i]->diffuse(um, hit, sphere);
 			specular = specular + lights[i]->specular(um, hit, sphere);
 		}
-	  color = ambient + diffuse + specular;		
+    level++;
+	  return ambient + diffuse + specular + ((1/level) * reflection(sphere, um, hit, spheres, lights, level));
 	}
 	else {
-    color = sphere.material.color;
-	}  
-    
-  return color + (0.2 * reflection(sphere, um, hit, spheres, lights, ++level));
+    return sphere.material.color;
+	}
 }

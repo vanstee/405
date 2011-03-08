@@ -48,17 +48,18 @@ using namespace std;
 
 Camera *camera;
 
-Light *lights[2] = {
-	new PointLight(Vector3d(-1.00, 1.00, 0.25), Color(0.4, 0.4, 0.8)),
-	new ParallelLight(Vector3d(-1.00, -1.70 , -1.00).normalize(), Color(0.8, 0.8, 0.2))	
+Light *lights[3] = {
+	new PointLight(Vector3d( 2, 0.5,  0), Color(1.0, 1.0, 0.9)),
+	new PointLight(Vector3d( 1, 0.5, -5), Color(0.9, 0.9, 1.0)),
+	new PointLight(Vector3d(-1, 1.0,  5), Color(1.0, 1.0, 0.9))
 };
-
+ 
 Sphere *spheres[5] = {
-	new Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Material(Color(1.0, 0.0, 0.0), 0.2, 1.0, 0.0)),
-	new Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Material(Color(0.0, 1.0, 0.0), 0.2, 0.3, 100.0)),
-	new Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Material(Color(0.0, 0.0, 1.0), 0.2, 0.5, 20.0)),
-	new Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Material(Color(1.0, 0.5, 0.0), 0.2, 0.5, 20.0)),			
-	new Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Material(Color(0.5, 0.0, 1.0), 0.2, 1.0, 0.0))
+	new Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Material(Color(1.0, 0.0, 0.0), 0.1, 0.2, 100)),
+	new Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Material(Color(0.0, 1.0, 0.0), 0.1, 0.2, 100)),
+	new Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Material(Color(0.0, 0.0, 1.0), 0.1, 0.2, 100)),
+	new Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Material(Color(1.0, 0.5, 0.0), 0.1, 0.2, 100)),			
+	new Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Material(Color(0.5, 0.0, 1.0), 0.1, 0.2, 100)) 
 };
 
 short perspective = true;
@@ -197,14 +198,14 @@ void drawScene() {
 			}
 
 			Color color(0, 0, 0);
-			
+			  
 			// if a sphere is hit loop over the lights
 			if(min > 0) {
 				Color ambient = sphere->material.color * sphere->material.ambient;
 				Color diffuse(0, 0, 0);
 				Color specular(0, 0, 0);
 				Vector3d hit = p + (ur * min);				
-				for(int i = 0; i < 2; i++) {
+				for(int i = 0; i < 3; i++) {
 					diffuse = diffuse + lights[i]->diffuse(ur, hit, *sphere);
 					specular = specular + lights[i]->specular(ur, hit, *sphere);
 				}
@@ -212,7 +213,7 @@ void drawScene() {
         Color reflection = Light::reflection(*sphere, ur, hit, spheres, lights, 0);
 				
 				// total up the color
-				color = ambient + diffuse + specular + reflection;
+				color = ambient + diffuse + specular + (0.2 * reflection);
 			}
 			
 			image.pixelColor(col, row, color.ColorRGB());
