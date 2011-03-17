@@ -213,7 +213,7 @@ void drawScene() {
         Color reflection = Light::reflection(*sphere, ur, hit, spheres, lights, 0);
 				
 				// total up the color
-				color = ambient + diffuse + specular + (0.2 * reflection);
+				color = ambient + diffuse + specular + reflection;
 			}
 			
 			image.pixelColor(col, row, color.ColorRGB());

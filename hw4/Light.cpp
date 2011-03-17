@@ -56,6 +56,6 @@ Color Light::reflection(Sphere sphere, Vector3d ur, Vector3d hit, Sphere *sphere
 	  return ambient + diffuse + specular + ((1/level) * reflection(sphere, um, hit, spheres, lights, level));
 	}
 	else {
-    return sphere.material.color;
+    return Color(0.0, 0.0, 0.0);
 	}
 }
