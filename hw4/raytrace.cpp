@@ -46,23 +46,12 @@
 
 using namespace std;
 
+int nlights, nspheres;
 Camera *camera;
-
-Light *lights[3] = {
-	new PointLight(Vector3d( 2, 0.5,  0), Color(1.0, 1.0, 0.9)),
-	new PointLight(Vector3d( 1, 0.5, -5), Color(0.9, 0.9, 1.0)),
-	new PointLight(Vector3d(-1, 1.0,  5), Color(1.0, 1.0, 0.9))
-};
- 
-Sphere *spheres[5] = {
-	new Sphere(Vector3d(-0.30,  0.10, -0.50), 0.050, Material(Color(1.0, 0.0, 0.0), 0.1, 0.2, 100)),
-	new Sphere(Vector3d( 0.00, -0.20, -0.80), 0.150, Material(Color(0.0, 1.0, 0.0), 0.1, 0.2, 100)),
-	new Sphere(Vector3d( 0.30,  0.30, -1.10), 0.300, Material(Color(0.0, 0.0, 1.0), 0.1, 0.2, 100)),
-	new Sphere(Vector3d( 0.10,  0.20, -0.30), 0.075, Material(Color(1.0, 0.5, 0.0), 0.1, 0.2, 100)),			
-	new Sphere(Vector3d(-0.20, -0.25, -0.40), 0.225, Material(Color(0.5, 0.0, 1.0), 0.1, 0.2, 100)) 
-};
-
+Light **lights;
+Sphere **spheres;
 short perspective = true;
+string scene = "";
 string filename = "";
 int width = 250;
 Magick::Image image;
@@ -132,43 +121,85 @@ void handleReshape(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-// parse camera.txt for camera
-void initCamera(const char* filename, double columns) {
-	ifstream file;
-	file.open(filename);
-	file.is_open();
-	if(!file.fail()) {
-		int line_number = 0;
-		double x, y, z, focal, aspect, width;
-		Vector3d vp, v, vup;
-		char line[64];
+void parseScene(const char* filename, double columns) {
+  ifstream file;
+  file.open(filename);
+  file.is_open();
+  if(!file.eof()) {
+    char line[64];
+    
+    file.getline(line, 64);
+    sscanf(line, "%d %d", &nlights, &nspheres);
+    
+    lights = new Light*[nlights];
+    spheres = new Sphere*[nspheres];
+    
+    nlights = nspheres = 0;
+    
+    double x, y, z, radius, r, g, b, ambient, diffuse, specular, focal, aspect, width;
+    Vector vp, v, vup, vector;
+    
+    while(!file.eof()) {
+      file.getline(line, 64);
+      if(strcmp(line, "camera") == 0) {
+      	file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &x, &y, &z);
+      	vp = Vector3d(x, y, z);
 
-		file.getline(line, 64);
-		sscanf(line, "%lf %lf %lf", &x, &y, &z);
-		vp = Vector3d(x, y, z);
+      	file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &x, &y, &z);
+      	v = Vector3d(x, y, z);
 
-		file.getline(line, 64);
-		sscanf(line, "%lf %lf %lf", &x, &y, &z);
-		v = Vector3d(x, y, z);
+      	file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &x, &y, &z);
+      	vup = Vector3d(x, y, z);
 
-		file.getline(line, 64);
-		sscanf(line, "%lf %lf %lf", &x, &y, &z);
-		vup = Vector3d(x, y, z);
+      	file.getline(line, 64);
+      	sscanf(line, "%lf", &focal);
 
-		file.getline(line, 64);
-		sscanf(line, "%lf", &focal);
+      	file.getline(line, 64);
+      	sscanf(line, "%lf", &aspect);
 
-		file.getline(line, 64);
-		sscanf(line, "%lf", &aspect);
+      	file.getline(line, 64);
+      	sscanf(line, "%lf", &width);
 
-		file.getline(line, 64);
-		sscanf(line, "%lf", &width);
+      	camera = new Camera(vp, v, vup, focal, aspect, width, columns);       
+      } else if(strcmp(line, "point light") == 0) {
+        file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &x, &y, &z);
+      	vector = Vector3d(x, y, z);
 
-		camera = new Camera(vp, v, vup, focal, aspect, width, columns);
-	}
-	else {
-		camera = new Camera(Vector3d(0, 0, 1), Vector3d(0, 0, -1), Vector3d(0, 1, 0), 0.5, 1.25, 0.5, double(width)); 
-	}
+      	file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &r, &g, &b);
+        Color color(r, g, b);
+
+        lights[nlights++] = new PointLight(vector, color);     
+      } else if(strcmp(line, "sphere") == 0) {
+        file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &x, &y, &z);
+      	vector = Vector3d(x, y, z);
+
+        file.getline(line, 64);
+      	sscanf(line, "%lf", &radius);
+
+        file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &r, &g, &b);
+      	Color color(r, g, b);
+
+        file.getline(line, 64);
+      	sscanf(line, "%lf %lf %lf", &ambient, &diffuse, &specular);
+        Material material(color, ambient, diffuse, specular);
+
+        spheres[nspheres++] = new Sphere(vector, radius, material);       
+      } else {
+        file.getline(line, 64);
+      }
+    }
+    file.close();
+  } else {
+    cout << "FAILURE: scene file not found\n";
+    exit(1);
+  }
 }
 
 void drawScene() {
@@ -226,23 +257,24 @@ void drawScene() {
 
 int main(int argc, char* argv[]){
 	if(argc > 4) {
-		cout << "USAGE: raycast [l|v] [pixwidth] [filename.ext]\n";
+		cout << "USAGE: raycast [l|v] [pixwidth] scene.txt [filename.ext]\n";
 		exit(1);		
 	}
 	
 	// parse command line arguments
-	for(int i = 0; i < argc; i++) {
+	for(int i = 1; i < argc; i++) {
 		if(strcmp(argv[i], "v") == 0 || strcmp(argv[i], "l") == 0) {
 			perspective = strcmp(argv[i], "v") == 0;
 		} else if(atoi(argv[i]) != 0) {
 			width = atoi(argv[i]);
-		} else {
+		} else if(scene.compare("") == 0) {
+      scene = string(argv[i]);
+	  } else {
 			filename = string(argv[i]);
 		}
 	}
-	
-	// parse camera.txt for camera
-	initCamera("camera.txt", width);
+
+  parseScene(scene.c_str(), width);
 	
 	stringstream dimensions;
 	dimensions << camera->columns << "x" << camera->rows;
