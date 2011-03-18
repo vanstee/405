@@ -8,11 +8,11 @@ off of other spheres. The camera, lights, and spheres can be specified in scene.
 
 Name: Patrick Van Stee
 
-Date: February 23, 2011
+Date: March 18, 2011
 
 Instructions:
 $ make clean && make
-$ ./shady [l|v] [pixwidth] scene.txt [filename.ext]
+$ ./raytrace [l|v] [pixwidth] scene.txt [filename.ext]
 Press w to write the display to the file specified in as the [filename.ext] option
 Press q or ESC to quit the program
 
