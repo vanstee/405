@@ -1,4 +1,4 @@
-3 5
+3 5             # light count and sphere count
 camera
 0.0 0.0 0.5     # viewpoint
 0.0 0.0 -1.0    # view direction
