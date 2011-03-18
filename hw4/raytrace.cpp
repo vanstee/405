@@ -220,7 +220,7 @@ void drawScene() {
 			
 			
 			// loop over the spheres
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < nspheres; i++) {
 				distance = spheres[i]->intersection(p, ur);
 				if(distance > 0 && (min < 0 || distance < min)) {
 					min = distance;
@@ -241,7 +241,7 @@ void drawScene() {
 					specular = specular + lights[i]->specular(ur, hit, *sphere);
 				}
 				
-        Color reflection = Light::reflection(*sphere, ur, hit, spheres, lights, 0);
+        Color reflection = Light::reflection(*sphere, ur, hit, spheres, nspheres, lights, nlights, 0);
 				
 				// total up the color
 				color = ambient + diffuse + specular + reflection;

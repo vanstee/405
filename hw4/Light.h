@@ -15,7 +15,7 @@ class Light {
 		Vector3d center, ul;
 		Color color;
 		Light(Vector3d vector, Color color);
-    static Color reflection(Sphere, Vector3d, Vector3d, Sphere**, Light**, int);
+    static Color reflection(Sphere, Vector3d, Vector3d, Sphere**, int, Light**, int, int);
 		virtual Color diffuse(Vector3d, Vector3d, Sphere) = 0;
 		virtual Color specular(Vector3d, Vector3d, Sphere) = 0;
 	protected:
