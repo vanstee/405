@@ -37,13 +37,14 @@ const GLfloat WHITE[]    = {1, 1, 1, 1};
 void init() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glClearColor(0, 0, 0, 1);
+  glClearColor(0, 0, 0, 0);
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_NORMALIZE);  
-  glShadeModel(GL_FLAT);
+  glEnable(GL_NORMALIZE);
+  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);  
   glLightfv(GL_LIGHT0, GL_AMBIENT, WHITE);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
   glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
+  glLightfv(GL_LIGHT0, GL_POSITION, LIGHTPOS);  
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0); 
 }
@@ -59,14 +60,7 @@ void display() {
   glRotatef(thetay, 0, 1, 0);
   glRotatef(thetax, 1, 0, 0);  
   
-  glutSolidCube(2);  
-  
-  glPushMatrix();
-    glLightfv(GL_LIGHT0, GL_AMBIENT, WHITE);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);  
-    glLightfv(GL_LIGHT0, GL_POSITION, LIGHTPOS);
-  glPopMatrix();  
+  glutSolidCube(2);
   
   glutSwapBuffers();
 }
@@ -162,4 +156,5 @@ int main(int argc, char** argv) {
   glutMotionFunc(motion);
   init();
   glutMainLoop();
+  return 0;
 }
