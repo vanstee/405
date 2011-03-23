@@ -80,7 +80,7 @@ void updateProjection(int width, int height) {
 }
 
 void drawCube(float width, int height, int depth) {
-  glutSolidTeapot(2);
+  glutSolidCube(2);
   
   /*glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MEDGREY);
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MEDGREY);
