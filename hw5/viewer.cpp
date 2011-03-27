@@ -60,6 +60,96 @@ void setup() {
   glEnable(GL_LIGHT0);  
 }
 
+void wirecube() { 
+  glBegin(GL_LINE_LOOP);
+    glNormal3f( 0,  0,  1);
+    glVertex3f(-1, -1,  1);
+    glVertex3f( 1, -1,  1);
+    glVertex3f( 1,  1,  1);
+    glVertex3f(-1,  1,  1);
+  glEnd();
+  glBegin(GL_LINE_LOOP);
+    glNormal3f( 0,  0, -1);
+    glVertex3f(-1, -1, -1);
+    glVertex3f(-1,  1, -1);
+    glVertex3f( 1,  1, -1);
+    glVertex3f( 1, -1, -1);
+  glEnd();
+  glBegin(GL_LINE_LOOP);
+    glNormal3f( 1,  0,  0);
+    glVertex3f( 1, -1,  1);
+    glVertex3f( 1, -1, -1);
+    glVertex3f( 1,  1, -1);
+    glVertex3f( 1,  1,  1);    
+  glEnd();
+  glBegin(GL_LINE_LOOP);
+    glNormal3f(-1,  0,  0);
+    glVertex3f(-1, -1,  1);
+    glVertex3f(-1,  1,  1);
+    glVertex3f(-1,  1, -1);
+    glVertex3f(-1, -1, -1);    
+  glEnd();
+  glBegin(GL_LINE_LOOP);
+    glNormal3f( 0,  1,  0);
+    glVertex3f(-1,  1,  1);
+    glVertex3f( 1,  1,  1);
+    glVertex3f( 1,  1, -1);
+    glVertex3f(-1,  1, -1);
+  glEnd();
+  glBegin(GL_LINE_LOOP);
+    glNormal3f( 0, -1,  0);
+    glVertex3f(-1, -1,  1);
+    glVertex3f(-1, -1, -1);
+    glVertex3f( 1, -1, -1);
+    glVertex3f( 1, -1,  1);
+  glEnd();  
+}
+
+void solidcube() {
+  glBegin(GL_POLYGON);
+    glNormal3f( 0,  0,  1);
+    glVertex3f(-1, -1,  1);
+    glVertex3f( 1, -1,  1);
+    glVertex3f( 1,  1,  1);
+    glVertex3f(-1,  1,  1);
+  glEnd();
+  glBegin(GL_POLYGON);
+    glNormal3f( 0,  0, -1);
+    glVertex3f(-1, -1, -1);
+    glVertex3f(-1,  1, -1);
+    glVertex3f( 1,  1, -1);
+    glVertex3f( 1, -1, -1);
+  glEnd();
+  glBegin(GL_POLYGON);
+    glNormal3f( 1,  0,  0);
+    glVertex3f( 1, -1,  1);
+    glVertex3f( 1, -1, -1);
+    glVertex3f( 1,  1, -1);
+    glVertex3f( 1,  1,  1);    
+  glEnd();
+  glBegin(GL_POLYGON);
+    glNormal3f(-1,  0,  0);
+    glVertex3f(-1, -1,  1);
+    glVertex3f(-1,  1,  1);
+    glVertex3f(-1,  1, -1);
+    glVertex3f(-1, -1, -1);    
+  glEnd();
+  glBegin(GL_POLYGON);
+    glNormal3f( 0,  1,  0);
+    glVertex3f(-1,  1,  1);
+    glVertex3f( 1,  1,  1);
+    glVertex3f( 1,  1, -1);
+    glVertex3f(-1,  1, -1);
+  glEnd();
+  glBegin(GL_POLYGON);
+    glNormal3f( 0, -1,  0);
+    glVertex3f(-1, -1,  1);
+    glVertex3f(-1, -1, -1);
+    glVertex3f( 1, -1, -1);
+    glVertex3f( 1, -1,  1);
+  glEnd();
+}
+
 void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
@@ -72,9 +162,9 @@ void display() {
   glRotatef(thetax, 1, 0, 0);  
   
   if(wireframe)
-    glutWireCube(2);
+    wirecube();
   else
-    glutSolidCube(2);
+    solidcube();
   
   glutSwapBuffers();
 }
