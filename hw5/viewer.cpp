@@ -19,22 +19,34 @@ using namespace std;
 
 #define ABS(x) x < 0 ? -x : x
 
-static bool perspective = false;
-static double pan       = 0;
-static double tilt      = 0;
-static double approach  = 0;
-static double thetax    = 0;
-static double thetay    = 0;
-static int mousex       = 0;
-static int mousey       = 0;
-static int button       = -1;
-static int width;
-static int height;
+static bool perspective, wireframe, pointlight;
+static double pan, tilt, approach, thetax, thetay;
+static int button;
+static int mousex, mousey;
+static int width, height;
 
-const GLfloat LIGHTPOS[] = {-6, 6, 6, 1};
-const GLfloat WHITE[]    = {1, 1, 1, 1};
+const GLfloat LIGHTPOS[] = {-6,  6,  6,  1};
+const GLfloat LIGHTDIR[] = { 0,  0, -1,  0};
+const GLfloat WHITE[]    = { 1,  1,  1,  1};
 
 void init() {
+  perspective = false;
+  wireframe   = true;
+  pointlight  = false;
+  pan         = 0;
+  tilt        = 0;
+  approach    = 0;
+  thetax      = 0;
+  thetay      = 0;
+  mousex      = 0;
+  mousey      = 0;
+  button      = -1;
+  width       = 800;
+  height      = 600;
+}
+
+void setup() {
+  init();  
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glClearColor(0, 0, 0, 0);
@@ -44,9 +56,8 @@ void init() {
   glLightfv(GL_LIGHT0, GL_AMBIENT, WHITE);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
   glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
-  glLightfv(GL_LIGHT0, GL_POSITION, LIGHTPOS);  
   glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0); 
+  glEnable(GL_LIGHT0);  
 }
 
 void display() {
@@ -60,7 +71,10 @@ void display() {
   glRotatef(thetay, 0, 1, 0);
   glRotatef(thetax, 1, 0, 0);  
   
-  glutSolidCube(2);
+  if(wireframe)
+    glutWireCube(2);
+  else
+    glutSolidCube(2);
   
   glutSwapBuffers();
 }
@@ -74,6 +88,16 @@ void reshape(int width, int height) {
     glFrustum(-DRAWWIDTH, DRAWWIDTH, -DRAWHEIGHT, DRAWHEIGHT, 1, 100);
   else
     glOrtho(-DRAWWIDTH, DRAWWIDTH, -DRAWHEIGHT, DRAWHEIGHT, 1, 100);
+  
+  if(wireframe)
+    glDisable(GL_LIGHTING);
+  else
+    glEnable(GL_LIGHTING);
+  
+  if(pointlight)
+    glLightfv(GL_LIGHT0, GL_POSITION, LIGHTPOS);
+  else
+    glLightfv(GL_LIGHT0, GL_POSITION, LIGHTDIR);
 
   glMatrixMode(GL_MODELVIEW);  
   
@@ -86,26 +110,27 @@ void keyboard(unsigned char key, int x, int y) {
     case 'p':
     case 'P':
       perspective = !perspective;
-      reshape(width, height);
-      glutPostRedisplay();
       break;
     case 'w':
     case 'W':
-      // wireframe or shaded
+      wireframe = !wireframe;
       break;
     case 'l':
     case 'L':
-      // infinite or point light
+      pointlight = !pointlight;
       break;      
     case 'i':
     case 'I':
-      // initial state
+      init();
       break;
     case 'q':
     case 'Q':
     case ESC:
       exit(0);
   }
+  
+  reshape(width, height);
+  glutPostRedisplay();
 }
 
 void mouse(int button, int state, int x, int y) {
@@ -154,7 +179,7 @@ int main(int argc, char** argv) {
   glutKeyboardFunc(keyboard);
   glutMouseFunc(mouse);
   glutMotionFunc(motion);
-  init();
+  setup();
   glutMainLoop();
   return 0;
 }
