@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cstdio>
 
 #ifdef __APPLE__
 #  include <GLUT/glut.h>
@@ -17,7 +18,7 @@ using namespace std;
 #define ROTFACTOR   0.2
 #define XLATEFACTOR 0.5
 
-#define ABS(x) x < 0 ? -x : x
+#define ABS(x) (x < 0 ? -x : x)
 
 static bool perspective, wireframe, pointlight;
 static double pan, tilt, approach, thetax, thetay;
@@ -239,16 +240,16 @@ void motion(int x, int y) {
   int dx = x - mousex;
   
   switch(button) {
-    case GLUT_LEFT_BUTTON:
+    case GLUT_MIDDLE_BUTTON:
       thetax -= ROTFACTOR * dy;
       thetay += ROTFACTOR * dx;
       break;      
-    case GLUT_MIDDLE_BUTTON:
-      pan -= ROTFACTOR * dy;
+    case GLUT_LEFT_BUTTON:
+      pan -= ROTFACTOR * dx;
       tilt += ROTFACTOR * dy;
       break;      
     case GLUT_RIGHT_BUTTON:
-      int delta = ABS(dx) > ABS(dy) ? dx : dy;
+      int delta = (ABS(dx) > ABS(dy) ? dx : dy);
       approach += XLATEFACTOR * delta;
       break;
   }
