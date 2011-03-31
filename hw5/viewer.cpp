@@ -15,20 +15,22 @@ using namespace std;
 #define NONE        -1
 #define DRAWWIDTH   4
 #define DRAWHEIGHT  3
-#define ROTFACTOR   0.2
+#define ROTFACTOR   0.5
 #define XLATEFACTOR 0.5
 
 #define ABS(x) (x < 0 ? -x : x)
 
 static bool perspective, wireframe, pointlight;
+static int shading;
 static double pan, tilt, approach, thetax, thetay;
 static int button;
 static int mousex, mousey;
 static int width, height;
 
-const GLfloat LIGHTPOS[] = {-6,  6,  6,  1};
-const GLfloat LIGHTDIR[] = { 0,  0, -1,  0};
+const GLfloat LIGHTPOS[] = {-6,  3,  9,  1};
+const GLfloat LIGHTDIR[] = { 0,  0,  1,  0};
 const GLfloat WHITE[]    = { 1,  1,  1,  1};
+const GLfloat BLACK[]    = { 0,  0,  0,  0};
 
 void init() {
   perspective = false;
@@ -53,12 +55,13 @@ void setup() {
   glClearColor(0, 0, 0, 0);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_NORMALIZE);
+  glShadeModel(GL_SMOOTH);  
   glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);  
-  glLightfv(GL_LIGHT0, GL_AMBIENT, WHITE);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
-  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHTING);  
+  glLightfv(GL_LIGHT0, GL_POSITION, LIGHTPOS); 
+  glLightfv(GL_LIGHT1, GL_POSITION, LIGHTDIR);
   glEnable(GL_LIGHT0);  
+  glEnable(GL_LIGHT1);  
 }
 
 void wirecube() { 
@@ -107,6 +110,8 @@ void wirecube() {
 }
 
 void solidcube() {
+  glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);    
+  glMaterialf(GL_FRONT, GL_SHININESS, 5);  
   glBegin(GL_POLYGON);
     glNormal3f( 0,  0,  1);
     glVertex3f(-1, -1,  1);
@@ -114,6 +119,8 @@ void solidcube() {
     glVertex3f( 1,  1,  1);
     glVertex3f(-1,  1,  1);
   glEnd();
+  glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);    
+  glMaterialf(GL_FRONT, GL_SHININESS, 5);  
   glBegin(GL_POLYGON);
     glNormal3f( 0,  0, -1);
     glVertex3f(-1, -1, -1);
@@ -121,6 +128,8 @@ void solidcube() {
     glVertex3f( 1,  1, -1);
     glVertex3f( 1, -1, -1);
   glEnd();
+  glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);    
+  glMaterialf(GL_FRONT, GL_SHININESS, 5);  
   glBegin(GL_POLYGON);
     glNormal3f( 1,  0,  0);
     glVertex3f( 1, -1,  1);
@@ -128,6 +137,8 @@ void solidcube() {
     glVertex3f( 1,  1, -1);
     glVertex3f( 1,  1,  1);    
   glEnd();
+  glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);    
+  glMaterialf(GL_FRONT, GL_SHININESS, 5);  
   glBegin(GL_POLYGON);
     glNormal3f(-1,  0,  0);
     glVertex3f(-1, -1,  1);
@@ -135,6 +146,8 @@ void solidcube() {
     glVertex3f(-1,  1, -1);
     glVertex3f(-1, -1, -1);    
   glEnd();
+  glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);    
+  glMaterialf(GL_FRONT, GL_SHININESS, 5);  
   glBegin(GL_POLYGON);
     glNormal3f( 0,  1,  0);
     glVertex3f(-1,  1,  1);
@@ -142,6 +155,8 @@ void solidcube() {
     glVertex3f( 1,  1, -1);
     glVertex3f(-1,  1, -1);
   glEnd();
+  glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);  
+  glMaterialf(GL_FRONT, GL_SHININESS, 5);  
   glBegin(GL_POLYGON);
     glNormal3f( 0, -1,  0);
     glVertex3f(-1, -1,  1);
@@ -160,12 +175,15 @@ void display() {
   glRotatef(pan, 0, 1, 0);
   glTranslatef(0, 0, approach);
   glRotatef(thetay, 0, 1, 0);
-  glRotatef(thetax, 1, 0, 0);  
+  glRotatef(thetax, 1, 0, 0);
   
   if(wireframe)
     wirecube();
   else
     solidcube();
+    
+  if(pointlight)
+    glLightfv(GL_LIGHT0, GL_POSITION, LIGHTPOS);
   
   glutSwapBuffers();
 }
@@ -185,11 +203,32 @@ void reshape(int width, int height) {
   else
     glEnable(GL_LIGHTING);
   
-  if(pointlight)
-    glLightfv(GL_LIGHT0, GL_POSITION, LIGHTPOS);
-  else
-    glLightfv(GL_LIGHT0, GL_POSITION, LIGHTDIR);
+  if(pointlight) {
+    glDisable(GL_LIGHT1);
+    glEnable(GL_LIGHT0);    
+  }
+  else {
+    glDisable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);    
+  }
 
+  glLightfv(GL_LIGHT0, GL_AMBIENT, WHITE);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);  
+  
+  glLightfv(GL_LIGHT1, GL_AMBIENT, WHITE);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, WHITE);
+  glLightfv(GL_LIGHT1, GL_SPECULAR, WHITE);
+  
+  switch(shading) {
+    case 2:
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, BLACK);
+      glLightfv(GL_LIGHT1, GL_DIFFUSE, BLACK);
+    case 1:
+      glLightfv(GL_LIGHT0, GL_SPECULAR, BLACK);
+      glLightfv(GL_LIGHT1, GL_SPECULAR, BLACK);
+  }
+  
   glMatrixMode(GL_MODELVIEW);  
   
   ::width = width;
@@ -213,6 +252,10 @@ void keyboard(unsigned char key, int x, int y) {
     case 'i':
     case 'I':
       init();
+      break;
+    case 's':
+    case 'S':
+      shading = (shading + 1) % 3;
       break;
     case 'q':
     case 'Q':
@@ -240,16 +283,16 @@ void motion(int x, int y) {
   int dx = x - mousex;
   
   switch(button) {
-    case GLUT_MIDDLE_BUTTON:
+    case GLUT_LEFT_BUTTON:
       thetax -= ROTFACTOR * dy;
       thetay += ROTFACTOR * dx;
       break;      
-    case GLUT_LEFT_BUTTON:
+    case GLUT_MIDDLE_BUTTON:
       pan -= ROTFACTOR * dx;
       tilt += ROTFACTOR * dy;
       break;      
     case GLUT_RIGHT_BUTTON:
-      int delta = (ABS(dx) > ABS(dy) ? dx : dy);
+      int delta = ABS(dx) > ABS(dy) ? dx : dy;
       approach += XLATEFACTOR * delta;
       break;
   }
