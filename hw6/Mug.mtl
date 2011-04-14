@@ -1,0 +1,23 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+# Multi/Sub mug2 (2) to come 
+#
+newmtl 03_-_Default
+Ka  0.0 0.0 0.0
+Kd  0.4 0.5 0.5
+Ks  0.1 0.1 0.1
+d  1.0
+Ns  10.0
+illum 2
+#
+newmtl anse
+Ka  0.0 0.0 0.0
+Kd  1.0 1.0 1.0
+Ks  0.0 0.0 0.0
+d  1.0
+Ns  10.0
+illum 2
+#
+# Multi/Sub mug2 done 
+#
+# EOF

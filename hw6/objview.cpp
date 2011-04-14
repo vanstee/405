@@ -1,15 +1,16 @@
 // Description:
-// This is a solution to homework 5 with basic and the first advanced extension implemented. 
-// The project has a structure similar to the hello and shader example programs, with opengl
+// This is a solution to homework 6 with the basic fuctionality implemented. 
+// The project has a structure similar to my hw5 solution and uses example 
+// code from the shader, hello, objload and mipmaps projects, with opengl
 // call backs and global variables that contain state information.
 // 
 // Name: Patrick Van Stee
 // 
-// Date: March 30, 2011
+// Date: April 13, 2011
 // 
 // Instructions:
 // $ make clean && make
-// $ ./objview
+// $ ./objview [tetrahedron.obj, cube.obj, Skeleton.obj or Mug.obj]
 // Press p to toggle between orthographic and perspective modes
 // Press w to toggle between wireframe and shaded viewing modes
 // Press l to toggle between a white infinite light and a point light
@@ -110,7 +111,7 @@ void scene(char *argv[]) {
 void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
-  gluLookAt(center.x, center.y, -(maxbox.z - minbox.z), center.x, center.y, center.z, 0, 1, 0);      
+  gluLookAt(center.x, center.y, center.z + (2 *(maxbox.z - minbox.z)), center.x, center.y, center.z, 0, 1, 0);      
   
   glTranslatef(center.x, center.y, center.z);
   
@@ -147,9 +148,9 @@ void reshape(int width, int height) {
   drawheight = max * (3.0 / 4.0);
   
   if(perspective)
-    glFrustum(-drawwidth, drawwidth, -drawheight, drawheight, 10, 1000);
+    glFrustum(-drawwidth, drawwidth, -drawheight, drawheight, 1, 100);
   else
-    glOrtho(-drawwidth, drawwidth, -drawheight, drawheight, 10, 1000);
+    glOrtho(-drawwidth, drawwidth, -drawheight, drawheight, 1, 100);
   
   if(wireframe)
     glDisable(GL_LIGHTING);
