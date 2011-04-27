@@ -56,10 +56,10 @@ static int button;
 static int mousex, mousey;
 static int width, height;
 
-const GLdouble LIGHTPOS[] = {-6,  3,  9,  1};
-const GLdouble LIGHTDIR[] = { 0,  0,  1,  0};
-const GLdouble WHITE[]    = { 1,  1,  1,  1};
-const GLdouble BLACK[]    = { 0,  0,  0,  0};
+const GLfloat LIGHTPOS[] = {-6,  3,  9,  1};
+const GLfloat LIGHTDIR[] = { 0,  0,  1,  0};
+const GLfloat WHITE[]    = { 1,  1,  1,  1};
+const GLfloat BLACK[]    = { 0,  0,  0,  0};
 
 void init() {
   perspective = false;
@@ -248,7 +248,7 @@ void blades() {
   gluDeleteQuadric(quad);  
 }
 
-void ring(GLdouble radius, GLdouble slices, GLdouble stacks) {  
+void ring(GLdouble radius, GLint slices, GLint stacks) {  
   GLUquadricObj *quad;
   quad = gluNewQuadric();
   
@@ -270,7 +270,7 @@ void ring(GLdouble radius, GLdouble slices, GLdouble stacks) {
   gluDeleteQuadric(quad);
 }
 
-void wheel(GLdouble radius, GLdouble spokes, GLdouble stacks) {
+void wheel(GLdouble radius, GLint spokes, GLint stacks) {
   GLUquadricObj *quad;
   quad = gluNewQuadric();
   
