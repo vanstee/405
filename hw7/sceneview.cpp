@@ -1,11 +1,13 @@
 // Description:
-// This is a solution to homework 5 with basic and the first advanced extension implemented. 
+// This is a solution to homework 7 with the basic requirements implemented. 
 // The project has a structure similar to the hello and shader example programs, with opengl
-// call backs and global variables that contain state information.
+// call backs and global variables that contain state information. The model displayed is of
+// a simple desk fan. The fan's blades rotate (keys f and v) as well as the base
+// (keys g and b), within a defined threshold.
 // 
 // Name: Patrick Van Stee
 // 
-// Date: March 30, 2011
+// Date: April 27, 2011
 // 
 // Instructions:
 // $ make clean && make
@@ -15,6 +17,10 @@
 // Press l to toggle between a white infinite light and a point light
 // Press i to reinitialize the program
 // Press s to cycle through ambient only, ambient + diffuse only, and ambient + diffuse + specular shading (advanced)
+// Press f to rotate the blades counter-clockwise
+// Press v to rotate the blades clockwise
+// Press g to rotate the base starting to the right
+// Press b to rotate the base starting to the left
 // Press q or ESC to quit the program
 
 #include <cstdlib>
@@ -123,7 +129,8 @@ void base() {
     glVertex3f(  -1,    0,    0);
     glVertex3f(-sq2, -0.1,  sq2);
     glVertex3f(-sq2,    0,  sq2);
-    glVertex3f(   0,    0,    1);    
+    glVertex3f(   0, -0.1,    1);
+    glVertex3f(   0,    0,    1);        
   glEnd();
   
   glBegin(GL_TRIANGLE_FAN);
@@ -205,7 +212,7 @@ void blades() {
     glTranslatef(0, 2, 0.5);  
     glRotatef(90, 0, 0, 1);
 
-    glRotatef(15 * fantheta, 0, 0, 1);
+    glRotatef(20 * fantheta, 0, 0, 1);
     
     glPushMatrix();
       glScalef(1, 1, 0.25);
