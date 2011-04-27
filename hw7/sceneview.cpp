@@ -56,10 +56,10 @@ static int button;
 static int mousex, mousey;
 static int width, height;
 
-const GLfloat LIGHTPOS[] = {-6,  3,  9,  1};
-const GLfloat LIGHTDIR[] = { 0,  0,  1,  0};
-const GLfloat WHITE[]    = { 1,  1,  1,  1};
-const GLfloat BLACK[]    = { 0,  0,  0,  0};
+const GLdouble LIGHTPOS[] = {-6,  3,  9,  1};
+const GLdouble LIGHTDIR[] = { 0,  0,  1,  0};
+const GLdouble WHITE[]    = { 1,  1,  1,  1};
+const GLdouble BLACK[]    = { 0,  0,  0,  0};
 
 void init() {
   perspective = false;
@@ -97,7 +97,7 @@ void setup() {
 }
 
 void base() {
-  GLfloat sq2 = sqrt(2) / 2.0;
+  GLdouble sq2 = sqrt(2) / 2.0;
     
   glBegin(GL_TRIANGLE_FAN);
     glVertex3f(   0,  0.2,    0);
@@ -148,7 +148,7 @@ void base() {
 }
 
 void arm() {
-  GLfloat sq2 = sqrt(2) / 2.0;
+  GLdouble sq2 = sqrt(2) / 2.0;
   
   GLUquadricObj *quad;
   quad = gluNewQuadric();
@@ -203,7 +203,7 @@ void arm() {
 }
 
 void blades() { 
-  GLfloat sq3 = sqrt(3) / 2.0;
+  GLdouble sq3 = sqrt(3) / 2.0;
   
   GLUquadricObj *quad;
   quad = gluNewQuadric();  
@@ -248,12 +248,12 @@ void blades() {
   gluDeleteQuadric(quad);  
 }
 
-void ring(GLfloat radius, GLfloat slices, GLfloat stacks) {  
+void ring(GLdouble radius, GLdouble slices, GLdouble stacks) {  
   GLUquadricObj *quad;
   quad = gluNewQuadric();
   
-  GLfloat degrees = 360.0 / slices;
-  GLfloat length = sin((degrees / 2.0) * (PI / 180)) * 2.0;
+  GLdouble degrees = 360.0 / slices;
+  GLdouble length = sin((degrees / 2.0) * (PI / 180)) * 2.0;
   
   glPushMatrix();
     glTranslatef(0, radius, 0);
@@ -270,11 +270,11 @@ void ring(GLfloat radius, GLfloat slices, GLfloat stacks) {
   gluDeleteQuadric(quad);
 }
 
-void wheel(GLfloat radius, GLfloat spokes, GLfloat stacks) {
+void wheel(GLdouble radius, GLdouble spokes, GLdouble stacks) {
   GLUquadricObj *quad;
   quad = gluNewQuadric();
   
-  GLfloat degrees = 360.0 / spokes;
+  GLdouble degrees = 360.0 / spokes;
   
   glPushMatrix();
     glRotatef(90, -1, 0, 0);
